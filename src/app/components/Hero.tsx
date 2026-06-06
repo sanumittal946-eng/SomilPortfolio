@@ -1,5 +1,5 @@
 import { motion } from 'motion/react';
-import { Mail, ArrowRight, Download } from 'lucide-react';
+import { Mail, ArrowRight, Download, Github } from 'lucide-react';
 import avatar from '../../assets/avatar.jpg';
 import resumePdf from '../../assets/Resume.pdf';
 
@@ -62,10 +62,11 @@ export function Hero() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.4, duration: 0.6 }}
-            className="text-xl mb-8 text-foreground/80"
-            style={{ fontWeight: 400, lineHeight: 1.6 }}
+            className="text-2xl mb-8 text-foreground/80"
+            style={{ fontWeight: 400, lineHeight: 1.7, fontSize: '1.35rem' }}
           >
-            BCA (AI & ML) Student passionate about Artificial Intelligence, Machine Learning, and emerging technologies.
+            BCA (AI &amp; ML) Student passionate about Artificial Intelligence, Machine Learning,{' '}
+            and emerging technologies. I build real-world AI solutions and love crafting impactful digital experiences.
           </motion.p>
 
           <motion.div
@@ -99,6 +100,39 @@ export function Hero() {
               <Mail size={20} />
               Contact Me
             </button>
+          </motion.div>
+
+          {/* Social Links */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.65, duration: 0.6 }}
+            className="flex items-center gap-4 mt-6"
+          >
+            <span className="text-sm text-foreground/50 font-medium tracking-wide uppercase">Find me on</span>
+            <div className="flex items-center gap-3">
+              <a
+                href="https://github.com/sanumittal946-eng"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="GitHub"
+                className="p-2.5 rounded-xl border border-border bg-background/60 text-foreground/70 hover:text-primary hover:border-primary/50 hover:bg-primary/5 hover:scale-110 transition-all duration-300 shadow-sm"
+              >
+                <Github size={22} />
+              </a>
+              <a
+                href="https://www.linkedin.com/in/somil-mittal-0803aa33a"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="LinkedIn"
+                className="p-2.5 rounded-xl border border-border bg-background/60 text-foreground/70 hover:text-[#0A66C2] hover:border-[#0A66C2]/50 hover:bg-[#0A66C2]/5 hover:scale-110 transition-all duration-300 shadow-sm"
+              >
+                {/* LinkedIn SVG icon */}
+                <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/>
+                </svg>
+              </a>
+            </div>
           </motion.div>
         </motion.div>
 
