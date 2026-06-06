@@ -81,7 +81,7 @@ export function ThreeDBackground() {
     window.addEventListener('resize', onResize);
 
     // ── Main loop ─────────────────────────────────────────────────────
-    const loop = (ts: number) => {
+    const loop = () => {
       ctx.clearRect(0, 0, W, H);
       const { primary, secondary, isDark } = getColors();
       const mouse = mouseRef.current;

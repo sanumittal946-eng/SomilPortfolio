@@ -1,4 +1,4 @@
-import { motion, AnimatePresence } from 'motion/react';
+import { motion } from 'motion/react';
 import { useInView } from './useInView';
 import { ExternalLink, Github, ChevronLeft, ChevronRight } from 'lucide-react';
 import { useRef, useState, useCallback } from 'react';
