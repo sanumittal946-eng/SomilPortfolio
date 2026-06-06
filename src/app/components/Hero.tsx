@@ -1,6 +1,7 @@
 import { motion } from 'motion/react';
-import { Mail, ArrowRight } from 'lucide-react';
+import { Mail, ArrowRight, Download } from 'lucide-react';
 import avatar from '../../assets/avatar.jpg';
+import resumePdf from '../../assets/Resume.pdf';
 
 export function Hero() {
   const scrollToProjects = () => {
@@ -81,6 +82,15 @@ export function Hero() {
               View My Work
               <ArrowRight size={20} />
             </button>
+            <a
+              href={resumePdf}
+              download="Somil_Mittal_Resume.pdf"
+              className="px-8 py-4 bg-transparent border-2 border-primary/30 text-primary rounded-xl hover:bg-primary/5 hover:border-primary transition-all flex items-center gap-2 cursor-pointer decoration-transparent select-none text-center"
+              style={{ fontWeight: 600 }}
+            >
+              <Download size={20} />
+              Download Resume
+            </a>
             <button
               onClick={scrollToContact}
               className="px-8 py-4 bg-transparent border-2 border-primary/30 text-primary rounded-xl hover:bg-primary/5 hover:border-primary transition-all flex items-center gap-2 cursor-pointer"
