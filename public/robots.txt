@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://sanumittal946-eng.github.io/SomilPortfolio/sitemap.xml
