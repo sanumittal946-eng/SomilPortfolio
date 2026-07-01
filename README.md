@@ -2,7 +2,7 @@
 
 Welcome to the official repository of my personal portfolio and professional developer showcase. Designed with a premium, high-fidelity cyberpunk aesthetic, this site highlights my work, academic milestones, verified certifications, and projects in Software Development, Artificial Intelligence (AI), and Machine Learning (ML).
 
-📱 **Live Link:** [https://somil566.github.io/SomilPortfolio/](https://somil566.github.io/SomilPortfolio/)
+📱 **Live Link:** [https://somil566.github.io/SomilPortfolio/](https://sanumittal946-eng.github.io/SomilPortfolio/)
 
 ---
 
