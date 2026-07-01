@@ -1,4 +1,6 @@
-import { Github, Linkedin, Mail, Heart, ArrowUp, Code2 } from 'lucide-react';
+import { useState } from 'react';
+import { Mail, Github, Linkedin, Heart, ArrowUp, Code2 } from 'lucide-react';
+import logoImg from '../../assets/logo.png';
 
 const NAV_LINKS = [
   { label: 'About',        href: '#about' },
@@ -14,58 +16,62 @@ const SOCIAL_LINKS = [
     label: 'Email',
     href:  'mailto:somilmittal946@gmail.com',
     icon:  <Mail size={18} />,
-    color: 'primary',
+    color: 'cyan',
   },
   {
     label: 'LinkedIn',
     href:  'https://www.linkedin.com/in/somil-mittal-293a72283',
     icon:  <Linkedin size={18} />,
-    color: 'secondary',
+    color: 'pink',
   },
   {
     label: 'GitHub',
     href:  'https://github.com/somil566',
     icon:  <Github size={18} />,
-    color: 'primary',
+    color: 'lime',
   },
 ];
 
 export function Footer() {
   const year = new Date().getFullYear();
 
-  const scrollToTop = () =>
+  const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
 
   return (
-    <footer className="relative border-t border-border bg-background/80 backdrop-blur-sm">
+    <footer className="bg-deep-void border-t border-glass-white/10 pt-16 pb-8 shadow-[0_-20px_50px_rgba(139,92,246,0.15)] w-full px-6 md:px-12 relative overflow-hidden z-10">
+      
+      {/* Top neon gradient line */}
+      <div className="absolute top-0 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-primary-container to-transparent drop-shadow-[0_0_8px_var(--primary-container)]" />
 
-      {/* Top gradient line */}
-      <div
-        className="absolute top-0 left-0 w-full h-px"
-        style={{ background: 'linear-gradient(to right, transparent, var(--primary), var(--secondary), transparent)' }}
-      />
-
-      <div className="max-w-7xl mx-auto px-6 pt-14 pb-8">
-
+      {/* Background ambient glow effect */}
+      <div className="absolute -bottom-24 left-1/2 -translate-x-1/2 w-[600px] h-[300px] bg-electric-purple/10 rounded-full blur-[80px] pointer-events-none z-0" />
+      
+      <div className="max-w-7xl mx-auto relative z-10">
+        
         {/* ── Main grid ─────────────────────────────────────────────── */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-12 mb-12">
+          
+          {/* Column 1: Brand & Logo */}
+          <div className="relative p-6 bg-surface-dim/20 backdrop-blur-sm rounded-2xl border border-glass-white/10 group">
+            {/* Screws */}
+            <div className="absolute top-2 left-2 w-1 h-1 rounded-full bg-surface-bright opacity-20"></div>
+            <div className="absolute top-2 right-2 w-1 h-1 rounded-full bg-surface-bright opacity-20"></div>
+            <div className="absolute bottom-2 left-2 w-1 h-1 rounded-full bg-surface-bright opacity-20"></div>
+            <div className="absolute bottom-2 right-2 w-1 h-1 rounded-full bg-surface-bright opacity-20"></div>
 
-          {/* Brand column */}
-          <div>
-            <div className="flex items-center gap-2 mb-4">
-              <div
-                className="w-8 h-8 rounded-lg flex items-center justify-center"
-                style={{ background: 'linear-gradient(135deg, var(--primary), var(--secondary))' }}
-              >
-                <Code2 size={16} color="white" />
+            <div className="flex items-center mb-4">
+              <div className="w-9 h-9 rounded-xl overflow-hidden flex items-center justify-center bg-primary-container/10 border border-primary-container/20 text-primary-container drop-shadow-[0_0_5px_var(--primary-container)]">
+                <img src={logoImg} alt="SM Logo" className="w-full h-full object-cover" />
               </div>
-              <span style={{ fontWeight: 800, fontSize: '1.2rem', letterSpacing: '-0.02em' }}>
-                Somil Mittal
+              <span className="font-headline text-lg font-bold text-on-surface select-none ml-3">
+                SOMIL MITTAL
               </span>
             </div>
-            <p className="text-foreground/55 text-sm leading-relaxed mb-5">
+            <p className="text-on-surface/65 text-sm font-body leading-relaxed mb-6 mt-4">
               Full-Stack Developer &amp; AI Enthusiast building smart, scalable,
-              and beautiful digital experiences.
+              and visually premium digital experiences.
             </p>
             {/* Social icons */}
             <div className="flex gap-3">
@@ -76,20 +82,13 @@ export function Footer() {
                   target={href.startsWith('mailto') ? undefined : '_blank'}
                   rel="noopener noreferrer"
                   aria-label={label}
-                  className="w-9 h-9 rounded-xl flex items-center justify-center border transition-all hover:scale-110 hover:shadow-lg"
-                  style={{
-                    borderColor: `var(--${color})30`,
-                    color:       `var(--${color})`,
-                    background:  `var(--${color})08`,
-                  }}
-                  onMouseEnter={(e) => {
-                    (e.currentTarget as HTMLElement).style.background = `var(--${color})`;
-                    (e.currentTarget as HTMLElement).style.color = 'white';
-                  }}
-                  onMouseLeave={(e) => {
-                    (e.currentTarget as HTMLElement).style.background = `var(--${color})08`;
-                    (e.currentTarget as HTMLElement).style.color = `var(--${color})`;
-                  }}
+                  className={`w-10 h-10 rounded-xl flex items-center justify-center border transition-all duration-300 hover:scale-110 ${
+                    color === 'cyan'
+                      ? 'border-tertiary-fixed-dim/20 hover:border-tertiary-fixed-dim/50 hover:bg-tertiary-fixed-dim/10 text-tertiary-fixed-dim hover:shadow-[0_0_15px_rgba(0,218,243,0.4)]'
+                      : color === 'pink'
+                      ? 'border-secondary-container/20 hover:border-secondary-container/50 hover:bg-secondary-container/10 text-secondary-container hover:shadow-[0_0_15px_rgba(255,74,141,0.4)]'
+                      : 'border-primary-container/20 hover:border-primary-container/50 hover:bg-primary-container/10 text-primary-container hover:shadow-[0_0_15px_rgba(195,244,0,0.4)]'
+                  }`}
                 >
                   {icon}
                 </a>
@@ -97,23 +96,19 @@ export function Footer() {
             </div>
           </div>
 
-          {/* Quick links */}
-          <div>
-            <h4 className="text-sm mb-5 text-foreground/40 uppercase tracking-widest" style={{ fontWeight: 700 }}>
+          {/* Column 2: Navigation Links */}
+          <div className="p-6">
+            <h4 className="text-xs mb-6 text-on-surface/40 font-label-caps uppercase tracking-widest font-bold">
               Navigate
             </h4>
-            <ul className="space-y-3">
+            <ul className="space-y-3.5">
               {NAV_LINKS.map(({ label, href }) => (
                 <li key={label}>
                   <a
                     href={href}
-                    className="text-sm text-foreground/60 hover:text-primary transition-colors flex items-center gap-2 group"
-                    style={{ fontWeight: 500 }}
+                    className="text-sm font-body text-on-surface/65 hover:text-primary-container transition-colors flex items-center gap-2 group"
                   >
-                    <span
-                      className="w-0 h-px bg-primary transition-all duration-300 group-hover:w-4"
-                      style={{ display: 'inline-block' }}
-                    />
+                    <span className="w-0 h-[2px] bg-primary-container transition-all duration-300 group-hover:w-3 shadow-[0_0_8px_var(--primary-container)]" />
                     {label}
                   </a>
                 </li>
@@ -121,65 +116,60 @@ export function Footer() {
             </ul>
           </div>
 
-          {/* Status / availability */}
-          <div>
-            <h4 className="text-sm mb-5 text-foreground/40 uppercase tracking-widest" style={{ fontWeight: 700 }}>
+          {/* Column 3: Availability & Contact Action */}
+          <div className="p-6 relative bg-surface-dim/20 backdrop-blur-sm rounded-2xl border border-glass-white/10 group">
+            {/* Screws */}
+            <div className="absolute top-2 left-2 w-1 h-1 rounded-full bg-surface-bright opacity-20"></div>
+            <div className="absolute top-2 right-2 w-1 h-1 rounded-full bg-surface-bright opacity-20"></div>
+            <div className="absolute bottom-2 left-2 w-1 h-1 rounded-full bg-surface-bright opacity-20"></div>
+            <div className="absolute bottom-2 right-2 w-1 h-1 rounded-full bg-surface-bright opacity-20"></div>
+
+            <h4 className="text-xs mb-6 text-on-surface/40 font-label-caps uppercase tracking-widest font-bold">
               Status
             </h4>
 
-            {/* Availability badge */}
-            <div className="flex items-center gap-2 mb-5">
-              <span className="relative flex h-2.5 w-2.5">
-                <span
-                  className="animate-ping absolute inline-flex h-full w-full rounded-full opacity-75"
-                  style={{ background: '#22c55e' }}
-                />
-                <span
-                  className="relative inline-flex rounded-full h-2.5 w-2.5"
-                  style={{ background: '#22c55e' }}
-                />
+            {/* Availability status badge */}
+            <div className="flex items-center gap-2.5 mb-5 p-3 bg-emerald-500/5 rounded-xl border border-emerald-500/20 max-w-fit glow-green">
+              <span className="relative flex h-2 w-2">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-500 opacity-75" />
+                <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500" />
               </span>
-              <span className="text-sm font-semibold" style={{ color: '#22c55e' }}>
+              <span className="text-xs font-label-caps uppercase tracking-wider font-bold text-emerald-400">
                 Available for work
               </span>
             </div>
 
-            <p className="text-foreground/50 text-sm leading-relaxed mb-5">
-              Open to freelance projects, internships, and full-time roles.
+            <p className="text-on-surface/65 text-sm font-body leading-relaxed mb-6">
+              Open to freelance collaborations, academic research, and full-time engineering roles.
             </p>
 
             <a
               href="#contact"
-              className="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm transition-all hover:scale-105 hover:shadow-md"
-              style={{
-                background:  'linear-gradient(135deg, var(--primary), var(--secondary))',
-                color:       'white',
-                fontWeight:  600,
-              }}
+              className="inline-flex items-center gap-2 px-5 py-3 rounded-xl text-xs font-label-caps uppercase tracking-widest font-bold bg-primary-container text-on-primary-container hover:scale-105 hover:-translate-y-0.5 transition-all shadow-[0_0_15px_rgba(195,244,0,0.4)] hover:shadow-[0_0_25px_rgba(195,244,0,0.65)]"
             >
               <Mail size={14} />
               Hire Me
             </a>
           </div>
+
         </div>
 
-        {/* ── Bottom bar ──────────────────────────────────────────────── */}
-        <div className="pt-6 border-t border-border flex flex-col sm:flex-row items-center justify-between gap-4">
-          <p className="text-foreground/45 text-sm flex items-center gap-1.5">
+        {/* ── Bottom Bar ──────────────────────────────────────────────── */}
+        <div className="max-w-7xl mx-auto pt-6 border-t border-glass-white/10 flex flex-col sm:flex-row items-center justify-between gap-6 relative z-10">
+          <p className="text-on-surface/45 text-xs font-label-caps uppercase tracking-wider font-bold flex items-center flex-wrap justify-center gap-1.5">
             © {year} Somil Mittal · Crafted with
-            <Heart size={13} className="text-red-500 fill-red-500 animate-pulse" />
+            <Heart size={13} className="text-secondary-container fill-secondary-container animate-pulse" />
             and lots of coffee
           </p>
 
-          {/* Back to top */}
+          {/* Back to Top */}
           <button
             onClick={scrollToTop}
             aria-label="Back to top"
-            className="flex items-center gap-2 text-sm text-foreground/45 hover:text-primary transition-colors group"
-            style={{ fontWeight: 500 }}
+            className="flex items-center gap-2.5 text-xs font-label-caps uppercase tracking-widest font-bold text-on-surface/45 hover:text-primary-container transition-colors group cursor-pointer"
           >
             Back to top
-            <span className="w-7 h-7 rounded-lg border border-border flex items-center justify-center group-hover:border-primary group-hover:bg-primary/5 transition-all">
+            <span className="w-8 h-8 rounded-full border border-glass-white/20 bg-glass-white/5 flex items-center justify-center group-hover:border-primary-container group-hover:bg-primary-container/10 group-hover:shadow-[0_0_10px_rgba(195,244,0,0.2)] transition-all">
               <ArrowUp size={14} />
             </span>
           </button>
