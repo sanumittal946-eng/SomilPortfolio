@@ -32,15 +32,28 @@ const SOCIAL_LINKS = [
   },
 ];
 
-export function Footer() {
+interface FooterProps {
+  onOpenPrivacy?: () => void;
+}
+
+export function Footer({ onOpenPrivacy }: FooterProps) {
   const year = new Date().getFullYear();
 
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
+  const handlePrivacyClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    if (onOpenPrivacy) {
+      onOpenPrivacy();
+    } else {
+      window.location.hash = '#privacy';
+    }
+  };
+
   return (
-    <footer className="bg-deep-void border-t border-glass-white/10 pt-16 pb-8 shadow-[0_-20px_50px_rgba(139,92,246,0.15)] w-full px-6 md:px-12 relative overflow-hidden z-10">
+    <footer className="bg-deep-void border-t border-glass-white/10 pt-14 sm:pt-16 pb-8 shadow-[0_-20px_50px_rgba(139,92,246,0.15)] w-full px-4 sm:px-6 md:px-12 relative overflow-hidden z-10">
       
       {/* Top neon gradient line */}
       <div className="absolute top-0 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-primary-container to-transparent drop-shadow-[0_0_8px_var(--primary-container)]" />
@@ -54,13 +67,7 @@ export function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-12 mb-12">
           
           {/* Column 1: Brand & Logo */}
-          <div className="relative p-6 bg-surface-dim/20 backdrop-blur-sm rounded-2xl border border-glass-white/10 group">
-            {/* Screws */}
-            <div className="absolute top-2 left-2 w-1 h-1 rounded-full bg-surface-bright opacity-20"></div>
-            <div className="absolute top-2 right-2 w-1 h-1 rounded-full bg-surface-bright opacity-20"></div>
-            <div className="absolute bottom-2 left-2 w-1 h-1 rounded-full bg-surface-bright opacity-20"></div>
-            <div className="absolute bottom-2 right-2 w-1 h-1 rounded-full bg-surface-bright opacity-20"></div>
-
+          <div className="relative p-6 bg-surface-dim rounded-2xl border border-border dark:border-glass-white/10 shadow-sm group">
             <div className="flex items-center mb-4">
               <div className="w-9 h-9 rounded-xl overflow-hidden flex items-center justify-center bg-primary-container/10 border border-primary-container/20 text-primary-container drop-shadow-[0_0_5px_var(--primary-container)]">
                 <img src={logoImg} alt="SM Logo" className="w-full h-full object-cover" />
@@ -117,14 +124,8 @@ export function Footer() {
           </div>
 
           {/* Column 3: Availability & Contact Action */}
-          <div className="p-6 relative bg-surface-dim/20 backdrop-blur-sm rounded-2xl border border-glass-white/10 group">
-            {/* Screws */}
-            <div className="absolute top-2 left-2 w-1 h-1 rounded-full bg-surface-bright opacity-20"></div>
-            <div className="absolute top-2 right-2 w-1 h-1 rounded-full bg-surface-bright opacity-20"></div>
-            <div className="absolute bottom-2 left-2 w-1 h-1 rounded-full bg-surface-bright opacity-20"></div>
-            <div className="absolute bottom-2 right-2 w-1 h-1 rounded-full bg-surface-bright opacity-20"></div>
-
-            <h4 className="text-xs mb-6 text-on-surface/40 font-label-caps uppercase tracking-widest font-bold">
+          <div className="p-6 relative bg-surface-dim rounded-2xl border border-border dark:border-glass-white/10 shadow-sm group">
+            <h4 className="text-xs mb-6 text-on-surface-variant font-label-caps uppercase tracking-widest font-bold">
               Status
             </h4>
 
@@ -162,17 +163,27 @@ export function Footer() {
             and lots of coffee
           </p>
 
-          {/* Back to Top */}
-          <button
-            onClick={scrollToTop}
-            aria-label="Back to top"
-            className="flex items-center gap-2.5 text-xs font-label-caps uppercase tracking-widest font-bold text-on-surface/45 hover:text-primary-container transition-colors group cursor-pointer"
-          >
-            Back to top
-            <span className="w-8 h-8 rounded-full border border-glass-white/20 bg-glass-white/5 flex items-center justify-center group-hover:border-primary-container group-hover:bg-primary-container/10 group-hover:shadow-[0_0_10px_rgba(195,244,0,0.2)] transition-all">
-              <ArrowUp size={14} />
-            </span>
-          </button>
+          {/* Links & Back to Top */}
+          <div className="flex items-center gap-6">
+            <button
+              onClick={handlePrivacyClick}
+              className="text-xs font-label-caps uppercase tracking-widest font-bold text-on-surface/45 hover:text-primary-container transition-colors cursor-pointer"
+            >
+              Privacy Policy
+            </button>
+
+            {/* Back to Top */}
+            <button
+              onClick={scrollToTop}
+              aria-label="Back to top"
+              className="flex items-center gap-2.5 text-xs font-label-caps uppercase tracking-widest font-bold text-on-surface/45 hover:text-primary-container transition-colors group cursor-pointer"
+            >
+              Back to top
+              <span className="w-8 h-8 rounded-full border border-glass-white/20 bg-glass-white/5 flex items-center justify-center group-hover:border-primary-container group-hover:bg-primary-container/10 group-hover:shadow-[0_0_10px_rgba(195,244,0,0.2)] transition-all">
+                <ArrowUp size={14} />
+              </span>
+            </button>
+          </div>
         </div>
 
       </div>

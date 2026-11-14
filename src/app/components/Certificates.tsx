@@ -4,6 +4,7 @@ import { useInView } from './useInView';
 import { Award, ExternalLink, BadgeCheck, X, Eye } from 'lucide-react';
 import googleCertPdf from '../../assets/Google Certified.pdf';
 import nptelCertPdf from '../../assets/NPTEL Certificet.pdf';
+import nptelHappinessCertPdf from '../../assets/NPTEL - Certificete  The Science of Wellebing.pdf';
 import unstopCertJpg from '../../assets/UNSTOP DSA in Python.jpg';
 import gdgCertJpeg from '../../assets/Google DEV won.jpeg';
 import codvedaCertPdf from '../../assets/Codveda Internship Certificate.pdf';
@@ -33,7 +34,13 @@ export function Certificates() {
       pdfUrl: googleCertPdf as string,
     },
     {
-      name: 'NPTEL Certification',
+      name: 'The Science of Happiness and Well-being',
+      platform: 'NPTEL — IIT',
+      year: '2025',
+      pdfUrl: nptelHappinessCertPdf as string,
+    },
+    {
+      name: 'Enhancing Soft Skills and Personality',
       platform: 'NPTEL — IIT',
       year: '2026',
       pdfUrl: nptelCertPdf as string,
@@ -95,10 +102,22 @@ export function Certificates() {
       height: 270,
       label: 'View this badge on Credly',
     },
+    {
+      id: '0ce6b37a-61df-4e97-a420-b57290c457ee',
+      width: 150,
+      height: 270,
+      label: 'View this badge on Credly',
+    },
+    {
+      id: '1468b322-c1d8-4a51-be13-a0e00753ca0b',
+      width: 150,
+      height: 270,
+      label: 'View this badge on Credly',
+    },
   ];
 
   return (
-    <section id="certificates" ref={ref} className="min-h-screen flex items-center justify-center py-20 px-6 relative overflow-hidden z-10">
+    <section id="certificates" ref={ref} className="min-h-screen flex items-center justify-center py-14 sm:py-20 px-4 sm:px-6 relative overflow-hidden z-10">
       
       {/* Background Glow */}
       <div className="absolute top-1/2 left-1/3 -translate-y-1/2 w-[550px] h-[550px] bg-electric-purple/5 rounded-full blur-[100px] pointer-events-none z-0" />
@@ -110,56 +129,50 @@ export function Certificates() {
           initial={{ opacity: 0, y: 30 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.6 }}
-          className="text-center mb-16"
+          className="text-center mb-12 sm:mb-16"
         >
-          <h2 className="mb-4 font-headline text-5xl md:text-6xl text-3d-metallic tracking-tighter" style={{ fontWeight: 800 }}>
+          <h2 className="mb-4 font-headline text-3xl sm:text-4xl md:text-5xl lg:text-6xl text-3d-metallic tracking-tighter" style={{ fontWeight: 800 }}>
             Certifications &amp; Badges
           </h2>
           <div className="w-24 h-1 bg-gradient-to-r from-primary-container via-tertiary-fixed-dim to-secondary-container mx-auto mb-4 shadow-[0_0_8px_var(--primary-container)]" />
-          <p className="text-md md:text-lg text-on-surface/75 max-w-2xl mx-auto font-body">
+          <p className="text-sm sm:text-base md:text-lg text-on-surface/75 max-w-2xl mx-auto font-body px-2">
             Professional certifications, completed courses, and verified digital badges
           </p>
         </motion.div>
  
         {/* ── Certificate Cards ── */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-16">
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 mb-16">
           {certificates.map((cert, index) => (
             <motion.div
               key={index}
               initial={{ opacity: 0, y: 30 }}
               animate={isInView ? { opacity: 1, y: 0 } : {}}
               transition={{ duration: 0.5, delay: 0.1 + index * 0.1 }}
-              className="group relative p-6 bg-surface-dim/40 backdrop-blur-md rounded-2xl border border-glass-white/10 shadow-lg hover:shadow-2xl hover:scale-105 hover:border-primary-container/30 transition-all overflow-hidden"
+              className="group relative p-4 sm:p-6 bg-surface-dim rounded-2xl border border-border dark:border-glass-white/10 shadow-sm hover:shadow-md hover:scale-105 hover:border-emerald-500/30 dark:hover:border-primary-container/30 transition-all overflow-hidden"
             >
-              {/* Screws */}
-              <div className="absolute top-2 left-2 w-1 h-1 rounded-full bg-surface-bright opacity-20"></div>
-              <div className="absolute top-2 right-2 w-1 h-1 rounded-full bg-surface-bright opacity-20"></div>
-              <div className="absolute bottom-2 left-2 w-1 h-1 rounded-full bg-surface-bright opacity-20"></div>
-              <div className="absolute bottom-2 right-2 w-1 h-1 rounded-full bg-surface-bright opacity-20"></div>
-
               {/* Background Pattern */}
               <div className="absolute top-0 right-0 w-32 h-32 bg-primary-container/5 rounded-full -translate-y-1/2 translate-x-1/2 group-hover:scale-150 transition-transform duration-500" />
  
               <div className="relative z-10">
                 <div className="flex items-start gap-4 mb-4">
-                  <div className="p-3 bg-primary-container/10 border border-primary-container/20 rounded-xl group-hover:bg-primary-container/20 text-primary-container transition-colors flex-shrink-0">
+                  <div className="p-3 bg-emerald-500/10 dark:bg-primary-container/10 border border-emerald-500/20 dark:border-primary-container/20 rounded-xl group-hover:bg-emerald-500/20 dark:group-hover:bg-primary-container/20 text-emerald-600 dark:text-primary-container transition-colors flex-shrink-0">
                     <Award size={26} strokeWidth={1.5} />
                   </div>
                   <div className="flex-1">
-                    <h3 className="text-lg font-bold font-body text-on-surface group-hover:text-primary-container transition-colors mb-2" style={{ lineHeight: 1.3 }}>
+                    <h3 className="text-lg font-bold font-body text-on-surface group-hover:text-emerald-600 dark:group-hover:text-primary-container transition-colors mb-2" style={{ lineHeight: 1.3 }}>
                       {cert.name}
                     </h3>
-                    <p className="text-on-surface/70 font-semibold text-sm font-body mb-1">
+                    <p className="text-on-surface-variant font-medium text-sm font-body mb-1">
                       {cert.platform}
                     </p>
-                    <p className="text-xs text-on-surface/40 font-label-caps uppercase tracking-wider font-bold">{cert.year}</p>
+                    <p className="text-xs text-on-surface-variant font-mono uppercase tracking-wider">{cert.year}</p>
                   </div>
                 </div>
  
                 <div className="flex gap-2.5 mt-6">
                   <button
                     onClick={() => setActiveCert(cert)}
-                    className="flex-1 px-4 py-2.5 bg-primary-container/10 border border-primary-container/20 text-primary-container hover:bg-primary-container hover:text-on-primary-container rounded-lg hover:shadow-[0_0_12px_var(--primary-container)] transition-all flex items-center justify-center gap-2 font-label-caps text-xs uppercase tracking-widest font-bold cursor-pointer"
+                    className="flex-1 px-4 py-2.5 bg-primary-container text-on-primary-container rounded-xl font-headline text-xs font-semibold shadow-sm hover:opacity-90 transition-all flex items-center justify-center gap-2 cursor-pointer"
                   >
                     <Eye size={14} />
                     View Preview
@@ -168,7 +181,7 @@ export function Certificates() {
                     href={cert.pdfUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="px-3 py-2.5 bg-glass-white/5 border border-glass-white/10 hover:border-primary-container/30 rounded-lg hover:bg-glass-white/20 text-on-surface hover:text-primary-container transition-all flex items-center justify-center cursor-pointer"
+                    className="px-3 py-2.5 bg-surface-dim border border-border dark:border-glass-white/20 hover:border-primary-container rounded-xl text-on-surface hover:text-emerald-600 dark:hover:text-primary-container transition-all flex items-center justify-center cursor-pointer shadow-sm"
                     title="Open in new tab"
                   >
                     <ExternalLink size={14} />
@@ -244,19 +257,12 @@ export function Certificates() {
 
       {/* ── Certificate Preview Modal ── */}
       {activeCert && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-deep-void/90 backdrop-blur-md animate-fade-in">
-          <div className="relative bg-surface-dim rounded-2xl border border-glass-white/20 p-6 max-w-4xl w-full h-[85vh] flex flex-col shadow-[0_0_50px_rgba(139,92,246,0.35)]">
-            
-            {/* Screws */}
-            <div className="absolute top-2 left-2 w-1.5 h-1.5 rounded-full bg-surface-bright opacity-30"></div>
-            <div className="absolute top-2 right-2 w-1.5 h-1.5 rounded-full bg-surface-bright opacity-30"></div>
-            <div className="absolute bottom-2 left-2 w-1.5 h-1.5 rounded-full bg-surface-bright opacity-30"></div>
-            <div className="absolute bottom-2 right-2 w-1.5 h-1.5 rounded-full bg-surface-bright opacity-30"></div>
-
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-deep-void/90 backdrop-blur-md animate-fade-in">
+          <div className="relative bg-surface-dim rounded-2xl border border-border dark:border-glass-white/20 p-4 sm:p-6 max-w-4xl w-full h-[92vh] sm:h-[85vh] flex flex-col shadow-2xl">
             {/* Modal Header */}
-            <div className="flex items-center justify-between border-b border-glass-white/10 pb-4 mb-4">
+            <div className="flex items-center justify-between border-b border-glass-white/10 pb-3 sm:pb-4 mb-3 sm:mb-4">
               <div>
-                <h3 className="text-lg font-bold font-headline text-primary-container">{activeCert.name}</h3>
+                <h3 className="text-base sm:text-lg font-bold font-headline text-primary-container leading-tight">{activeCert.name}</h3>
                 <p className="text-xs text-on-surface/60 font-body mt-0.5">{activeCert.platform} · {activeCert.year}</p>
               </div>
               <button 
@@ -285,23 +291,23 @@ export function Certificates() {
             </div>
 
             {/* Modal Footer */}
-            <div className="flex flex-col sm:flex-row items-center justify-between gap-4 border-t border-glass-white/10 pt-4 mt-4">
-              <span className="text-xs text-on-surface/40 font-label-caps uppercase tracking-wider font-semibold">
-                SECURE ACCESS LOGGED // ENCRYPTED LINK
+            <div className="flex flex-col sm:flex-row items-center justify-between gap-3 sm:gap-4 border-t border-glass-white/10 pt-3 sm:pt-4 mt-3 sm:mt-4">
+              <span className="text-xs text-on-surface/50 font-body">
+                Official Credential Document
               </span>
-              <div className="flex gap-3 w-full sm:w-auto">
+              <div className="flex gap-2.5 sm:gap-3 w-full sm:w-auto">
                 <a
                   href={activeCert.pdfUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex-1 sm:flex-none px-5 py-2.5 bg-primary-container text-on-primary-container hover:scale-105 transition-all rounded-lg flex items-center justify-center gap-1.5 font-label-caps font-bold text-xs shadow-md shadow-primary-container/20"
+                  className="flex-1 sm:flex-none px-4 sm:px-5 py-2.5 bg-primary-container text-on-primary-container hover:opacity-90 transition-all rounded-lg flex items-center justify-center gap-1.5 font-headline font-semibold text-xs shadow-md"
                 >
                   <ExternalLink size={14} />
                   Open in New Tab
                 </a>
                 <button
                   onClick={() => setActiveCert(null)}
-                  className="flex-1 sm:flex-none px-5 py-2.5 bg-transparent border border-glass-white text-on-surface hover:bg-glass-white/15 transition-all rounded-lg font-label-caps font-bold text-xs cursor-pointer"
+                  className="flex-1 sm:flex-none px-4 sm:px-5 py-2.5 bg-surface-container border border-border dark:border-glass-white/20 text-on-surface hover:bg-surface-container-high transition-all rounded-lg font-headline font-semibold text-xs cursor-pointer"
                 >
                   Close Preview
                 </button>

@@ -33,7 +33,7 @@ export function Contact() {
 
 
   return (
-    <section id="contact" ref={ref} className="min-h-screen flex items-center justify-center py-20 px-6 relative overflow-hidden z-10">
+    <section id="contact" ref={ref} className="min-h-screen flex items-center justify-center py-14 sm:py-20 px-4 sm:px-6 relative overflow-hidden z-10">
       
       {/* Background Glow */}
       <div className="absolute top-1/2 left-1/4 -translate-y-1/2 w-[550px] h-[550px] bg-electric-purple/5 rounded-full blur-[100px] pointer-events-none z-0" />
@@ -43,40 +43,34 @@ export function Contact() {
           initial={{ opacity: 0, y: 30 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.6 }}
-          className="text-center mb-16"
+          className="text-center mb-12 sm:mb-16"
         >
-          <h2 className="mb-4 font-headline text-5xl md:text-6xl text-3d-metallic tracking-tighter" style={{ fontWeight: 800 }}>
+          <h2 className="mb-4 font-headline text-3xl sm:text-4xl md:text-5xl lg:text-6xl text-3d-metallic tracking-tighter" style={{ fontWeight: 800 }}>
             Get In Touch
           </h2>
           <div className="w-24 h-1 bg-gradient-to-r from-primary-container via-tertiary-fixed-dim to-secondary-container mx-auto mb-4 shadow-[0_0_8px_var(--primary-container)]" />
-          <p className="text-md md:text-lg text-on-surface/75 max-w-2xl mx-auto font-body">
+          <p className="text-sm sm:text-base md:text-lg text-on-surface/75 max-w-2xl mx-auto font-body px-2">
             Have a project in mind? Let's work together to create something amazing!
           </p>
         </motion.div>
  
-        <div className="grid md:grid-cols-2 gap-12">
+        <div className="grid md:grid-cols-2 gap-8 md:gap-12">
           {/* Contact Form */}
           <motion.div
             initial={{ opacity: 0, x: -30 }}
             animate={isInView ? { opacity: 1, x: 0 } : {}}
             transition={{ duration: 0.6, delay: 0.2 }}
           >
-            <form onSubmit={handleSubmit(onSubmit)} className="space-y-6 p-8 bg-surface-dim/40 backdrop-blur-md rounded-2xl border border-glass-white/10 shadow-2xl relative overflow-hidden group">
-              {/* Screws */}
-              <div className="absolute top-2.5 left-2.5 w-1 h-1 rounded-full bg-surface-bright opacity-20"></div>
-              <div className="absolute top-2.5 right-2.5 w-1 h-1 rounded-full bg-surface-bright opacity-20"></div>
-              <div className="absolute bottom-2.5 left-2.5 w-1 h-1 rounded-full bg-surface-bright opacity-20"></div>
-              <div className="absolute bottom-2.5 right-2.5 w-1 h-1 rounded-full bg-surface-bright opacity-20"></div>
-
+            <form onSubmit={handleSubmit(onSubmit)} className="space-y-5 sm:space-y-6 p-5 sm:p-8 bg-surface-dim rounded-2xl border border-border dark:border-glass-white/10 shadow-lg relative overflow-hidden group">
               <div>
-                <label className="block mb-2 font-label-caps text-xs uppercase tracking-widest text-secondary-container font-bold">
+                <label className="block mb-2 font-label-caps text-xs uppercase tracking-widest text-on-surface font-bold">
                   Your Name
                 </label>
                 <input
                   {...register('name', { required: 'Name is required' })}
                   type="text"
                   placeholder="John Doe"
-                  className="w-full px-4 py-3 bg-background/60 border border-glass-white/10 rounded-xl focus:outline-none focus:ring-2 focus:ring-secondary-container/40 text-on-surface transition-all placeholder:text-on-surface/20 text-sm"
+                  className="w-full px-4 py-3 bg-surface-container/70 border border-border rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-container/40 text-on-surface transition-all placeholder:text-on-surface-variant/50 text-sm"
                 />
                 {errors.name && (
                   <p className="text-destructive text-xs font-mono mt-1">{String(errors.name.message)}</p>
@@ -84,7 +78,7 @@ export function Contact() {
               </div>
  
               <div>
-                <label className="block mb-2 font-label-caps text-xs uppercase tracking-widest text-secondary-container font-bold">
+                <label className="block mb-2 font-label-caps text-xs uppercase tracking-widest text-on-surface font-bold">
                   Email Address
                 </label>
                 <input
@@ -97,7 +91,7 @@ export function Contact() {
                   })}
                   type="email"
                   placeholder="john@example.com"
-                  className="w-full px-4 py-3 bg-background/60 border border-glass-white/10 rounded-xl focus:outline-none focus:ring-2 focus:ring-secondary-container/40 text-on-surface transition-all placeholder:text-on-surface/20 text-sm"
+                  className="w-full px-4 py-3 bg-surface-container/70 border border-border rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-container/40 text-on-surface transition-all placeholder:text-on-surface-variant/50 text-sm"
                 />
                 {errors.email && (
                   <p className="text-destructive text-xs font-mono mt-1">{String(errors.email.message)}</p>
@@ -105,14 +99,14 @@ export function Contact() {
               </div>
  
               <div>
-                <label className="block mb-2 font-label-caps text-xs uppercase tracking-widest text-secondary-container font-bold">
+                <label className="block mb-2 font-label-caps text-xs uppercase tracking-widest text-on-surface font-bold">
                   Message
                 </label>
                 <textarea
                   {...register('message', { required: 'Message is required' })}
                   rows={5}
-                  placeholder="Tell me about your project..."
-                  className="w-full px-4 py-3 bg-background/60 border border-glass-white/10 rounded-xl focus:outline-none focus:ring-2 focus:ring-secondary-container/40 text-on-surface transition-all placeholder:text-on-surface/20 text-sm resize-none"
+                  placeholder="Tell me about your project or inquiry..."
+                  className="w-full px-4 py-3 bg-surface-container/70 border border-border rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-container/40 text-on-surface transition-all placeholder:text-on-surface-variant/50 text-sm resize-none"
                 />
                 {errors.message && (
                   <p className="text-destructive text-xs font-mono mt-1">{String(errors.message.message)}</p>
@@ -122,7 +116,7 @@ export function Contact() {
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className="w-full px-6 py-4 bg-primary-container text-on-primary-container rounded-xl hover:scale-105 hover:-translate-y-0.5 transition-all flex items-center justify-center gap-2 shadow-[0_0_15px_rgba(195,244,0,0.4)] hover:shadow-[0_0_25px_rgba(195,244,0,0.65)] font-label-caps text-xs uppercase tracking-widest font-bold cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed disabled:scale-100"
+                className="w-full px-6 py-4 bg-primary-container text-on-primary-container rounded-xl hover:opacity-90 hover:-translate-y-0.5 transition-all flex items-center justify-center gap-2 shadow-md hover:shadow-lg font-headline text-sm font-semibold cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed min-h-[48px]"
               >
                 {isSubmitting ? (
                   <>
@@ -130,7 +124,7 @@ export function Contact() {
                       <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
                       <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z" />
                     </svg>
-                    Broadcasting...
+                    Sending Message...
                   </>
                 ) : (
                   <>
@@ -154,19 +148,15 @@ export function Contact() {
               {/* Email Card */}
               <a
                 href="mailto:somilmittal946@gmail.com"
-                className="block p-6 bg-surface-dim/40 backdrop-blur-md rounded-2xl border border-glass-white/10 shadow-lg hover:shadow-2xl hover:scale-[1.02] hover:border-primary-container/30 transition-all cursor-pointer group relative overflow-hidden"
+                className="block p-6 bg-surface-dim rounded-2xl border border-border dark:border-glass-white/10 shadow-sm hover:shadow-lg hover:scale-[1.01] hover:border-emerald-500/30 dark:hover:border-primary-container/30 transition-all cursor-pointer group relative overflow-hidden"
               >
-                {/* Screws */}
-                <div className="absolute top-2 left-2 w-1 h-1 rounded-full bg-surface-bright opacity-20"></div>
-                <div className="absolute top-2 right-2 w-1 h-1 rounded-full bg-surface-bright opacity-20"></div>
-
                 <div className="flex items-center gap-4">
-                  <div className="p-3 bg-primary-container/10 border border-primary-container/20 text-primary-container group-hover:bg-primary-container/20 rounded-xl transition-all">
+                  <div className="p-3 bg-emerald-500/10 dark:bg-primary-container/10 border border-emerald-500/20 dark:border-primary-container/20 text-emerald-600 dark:text-primary-container group-hover:bg-emerald-500/20 rounded-xl transition-all">
                     <Mail size={24} strokeWidth={1.5} />
                   </div>
                   <div>
-                    <h3 className="mb-1 font-label-caps text-xs uppercase tracking-widest font-bold text-primary-container/70 group-hover:text-primary-container transition-colors">Email</h3>
-                    <p className="text-on-surface/85 group-hover:text-on-surface transition-colors font-medium font-body text-sm break-all md:text-base">somilmittal946@gmail.com</p>
+                    <h3 className="mb-1 font-label-caps text-xs uppercase tracking-widest font-bold text-emerald-600 dark:text-primary-container transition-colors">Email</h3>
+                    <p className="text-on-surface group-hover:text-emerald-600 dark:group-hover:text-primary-container transition-colors font-medium font-body text-sm break-all md:text-base">somilmittal946@gmail.com</p>
                   </div>
                 </div>
               </a>
@@ -176,12 +166,8 @@ export function Contact() {
                 href="https://www.linkedin.com/in/somil-mittal-293a72283"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="block p-6 bg-surface-dim/40 backdrop-blur-md rounded-2xl border border-glass-white/10 shadow-lg hover:shadow-2xl hover:scale-[1.02] hover:border-secondary-container/30 transition-all cursor-pointer group relative overflow-hidden"
+                className="block p-6 bg-surface-dim rounded-2xl border border-border dark:border-glass-white/10 shadow-sm hover:shadow-lg hover:scale-[1.01] hover:border-secondary-container/30 transition-all cursor-pointer group relative overflow-hidden"
               >
-                {/* Screws */}
-                <div className="absolute top-2 left-2 w-1 h-1 rounded-full bg-surface-bright opacity-20"></div>
-                <div className="absolute top-2 right-2 w-1 h-1 rounded-full bg-surface-bright opacity-20"></div>
-
                 <div className="flex items-center gap-4">
                   <div className="p-3 bg-secondary-container/10 border border-secondary-container/20 text-secondary-container group-hover:bg-secondary-container/20 rounded-xl transition-all">
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-linkedin">
@@ -191,8 +177,8 @@ export function Contact() {
                     </svg>
                   </div>
                   <div>
-                    <h3 className="mb-1 font-label-caps text-xs uppercase tracking-widest font-bold text-secondary-container/70 group-hover:text-secondary-container transition-colors">LinkedIn</h3>
-                    <p className="text-on-surface/85 group-hover:text-on-surface transition-colors font-medium font-body text-sm break-all md:text-base">linkedin.com/in/somil-mittal-293a72283</p>
+                    <h3 className="mb-1 font-label-caps text-xs uppercase tracking-widest font-bold text-secondary-container transition-colors">LinkedIn</h3>
+                    <p className="text-on-surface group-hover:text-secondary-container transition-colors font-medium font-body text-sm break-all md:text-base">linkedin.com/in/somil-mittal-293a72283</p>
                   </div>
                 </div>
               </a>
@@ -202,12 +188,8 @@ export function Contact() {
                 href="https://github.com/somil566"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="block p-6 bg-surface-dim/40 backdrop-blur-md rounded-2xl border border-glass-white/10 shadow-lg hover:shadow-2xl hover:scale-[1.02] hover:border-tertiary-fixed-dim/30 transition-all cursor-pointer group relative overflow-hidden"
+                className="block p-6 bg-surface-dim rounded-2xl border border-border dark:border-glass-white/10 shadow-sm hover:shadow-lg hover:scale-[1.01] hover:border-tertiary-fixed-dim/30 transition-all cursor-pointer group relative overflow-hidden"
               >
-                {/* Screws */}
-                <div className="absolute top-2 left-2 w-1 h-1 rounded-full bg-surface-bright opacity-20"></div>
-                <div className="absolute top-2 right-2 w-1 h-1 rounded-full bg-surface-bright opacity-20"></div>
-
                 <div className="flex items-center gap-4">
                   <div className="p-3 bg-tertiary-fixed-dim/10 border border-tertiary-fixed-dim/20 text-tertiary-fixed-dim group-hover:bg-tertiary-fixed-dim/20 rounded-xl transition-all">
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-github">
@@ -216,22 +198,16 @@ export function Contact() {
                     </svg>
                   </div>
                   <div>
-                    <h3 className="mb-1 font-label-caps text-xs uppercase tracking-widest font-bold text-tertiary-fixed-dim/70 group-hover:text-tertiary-fixed-dim transition-colors">GitHub</h3>
-                    <p className="text-on-surface/85 group-hover:text-on-surface transition-colors font-medium font-body text-sm break-all md:text-base">github.com/somil566</p>
+                    <h3 className="mb-1 font-label-caps text-xs uppercase tracking-widest font-bold text-tertiary-fixed-dim transition-colors">GitHub</h3>
+                    <p className="text-on-surface group-hover:text-tertiary-fixed-dim transition-colors font-medium font-body text-sm break-all md:text-base">github.com/somil566</p>
                   </div>
                 </div>
               </a>
             </div>
  
             {/* Availability Box */}
-            <div className="mt-8 p-6 bg-glass-white/5 rounded-2xl border border-glass-white/10 backdrop-blur-sm relative overflow-hidden group">
-              {/* Screws */}
-              <div className="absolute top-2.5 left-2.5 w-1 h-1 rounded-full bg-surface-bright opacity-20"></div>
-              <div className="absolute top-2.5 right-2.5 w-1 h-1 rounded-full bg-surface-bright opacity-20"></div>
-              <div className="absolute bottom-2.5 left-2.5 w-1 h-1 rounded-full bg-surface-bright opacity-20"></div>
-              <div className="absolute bottom-2.5 right-2.5 w-1 h-1 rounded-full bg-surface-bright opacity-20"></div>
-
-              <p className="text-center text-on-surface/75 font-body text-sm leading-relaxed">
+            <div className="mt-8 p-6 bg-surface-dim rounded-2xl border border-border dark:border-glass-white/10 shadow-sm relative overflow-hidden group">
+              <p className="text-center text-on-surface-variant font-body text-sm leading-relaxed">
                 I'm currently available for freelance work and full-time opportunities.
                 Feel free to reach out if you'd like to collaborate!
               </p>
