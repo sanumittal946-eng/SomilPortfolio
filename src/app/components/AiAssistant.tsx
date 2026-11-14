@@ -192,7 +192,7 @@ export function AiAssistant() {
   const [input, setInput] = useState('');
   const [isTyping, setIsTyping] = useState(false);
 
-  // Hidden API key loaded exclusively from environment variables (kept safe and never exposed in the GUI)
+  // API key loaded securely from environment variable (injected at build time via GitHub Secrets or local .env)
   const apiKey = (import.meta.env.VITE_GEMINI_API_KEY || '').trim();
 
   const [messages, setMessages] = useState<Message[]>([
@@ -218,7 +218,7 @@ export function AiAssistant() {
 
   // Real-Time LLM API Call (Supports Groq & Google Gemini seamlessly in background)
   const callAiApi = async (userQuery: string, history: Message[]): Promise<string> => {
-    // ── Groq Cloud Execution (High-speed Llama / Qwen inference) ──
+    // ── Groq Cloud Execution (High-speed Llama / Qwen / GPT inference) ──
     if (apiKey.startsWith('gsk_')) {
       const messagesPayload = [
         { role: 'system', content: SYSTEM_INSTRUCTION },
@@ -246,7 +246,7 @@ export function AiAssistant() {
         }),
       });
 
-      // Fallback model: qwen/qwen3.8-27b
+      // Fallback model 1: qwen/qwen3.8-27b
       if (!res.ok) {
         res = await fetch('https://api.groq.com/openai/v1/chat/completions', {
           method: 'POST',
@@ -263,8 +263,25 @@ export function AiAssistant() {
         });
       }
 
+      // Fallback model 2: openai/gpt-oss-20b
       if (!res.ok) {
-        throw new Error(`API error ${res.status}`);
+        res = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${apiKey}`,
+          },
+          body: JSON.stringify({
+            model: 'openai/gpt-oss-20b',
+            messages: messagesPayload,
+            temperature: 0.7,
+            max_tokens: 500,
+          }),
+        });
+      }
+
+      if (!res.ok) {
+        throw new Error(`Groq API error ${res.status}`);
       }
 
       const data = await res.json();
@@ -313,32 +330,73 @@ export function AiAssistant() {
   // Fallback Local Knowledge Base
   const getFallbackReply = (query: string) => {
     const lower = query.toLowerCase();
-    if (lower.includes('skill') || lower.includes('ai') || lower.includes('python')) {
+
+    // Who is Somil / About
+    if (lower.includes('who') || lower.includes('about') || lower.includes('somil') || lower.includes('bio') || lower.includes('tell me')) {
       return {
-        reply: "Somil specializes in AI & Machine Learning, Computer Vision (OpenCV), and Full-Stack Development (Python, C, React, Next.js, PostgreSQL, Supabase).",
+        reply: "Somil Mittal is an AI & Machine Learning Developer and BCA student at Poornima University, Jaipur. He builds intelligent web systems, computer vision models, and scalable full-stack applications.",
+        action: { label: 'About Somil', sectionId: 'about' },
+      };
+    }
+
+    // Skills & Technologies
+    if (lower.includes('skill') || lower.includes('tech') || lower.includes('python') || lower.includes('language') || lower.includes('stack')) {
+      return {
+        reply: "Somil's technical arsenal includes Python, C, JavaScript/TypeScript, Computer Vision (OpenCV), PyTorch, React, Next.js, Tailwind CSS, PostgreSQL, and Supabase.",
         action: { label: 'Explore Skills', sectionId: 'skills' },
       };
     }
-    if (lower.includes('hackathon') || lower.includes('gdg') || lower.includes('code connect')) {
+
+    // Projects
+    if (lower.includes('project') || lower.includes('hackathon') || lower.includes('gdg') || lower.includes('code connect') || lower.includes('attendance') || lower.includes('laundry') || lower.includes('finance')) {
       return {
-        reply: "Somil secured 1st Place at the GDG Hackathon with Code Connect — a real-time developer collaboration platform featuring an AI Research Assistant and gamified coding challenges.",
-        action: { label: 'View Project', sectionId: 'projects' },
+        reply: "Somil has built multiple real-world systems, including Code Connect (1st Place Winner at GDG Hackathon), Face Recognition Attendance System (OpenCV), AI Finance Advisor SaaS, and a Database Laundry Management System.",
+        action: { label: 'View Featured Projects', sectionId: 'projects' },
       };
     }
-    if (lower.includes('certif') || lower.includes('nptel') || lower.includes('badge')) {
+
+    // Education
+    if (lower.includes('education') || lower.includes('college') || lower.includes('university') || lower.includes('degree') || lower.includes('study') || lower.includes('poornima') || lower.includes('bca')) {
       return {
-        reply: "Somil holds credentials from Google (Gemini Certified Student), NPTEL — IIT (The Science of Happiness and Well-being & Soft Skills), Unstop (Python DSA), and 8 verified Credly digital badges.",
+        reply: "Somil is currently pursuing a Bachelor of Computer Applications (BCA) with specialization in AI & Machine Learning at Poornima University, Jaipur (2025–2028).",
+        action: { label: 'View Education', sectionId: 'education' },
+      };
+    }
+
+    // Experience / Internship
+    if (lower.includes('experience') || lower.includes('intern') || lower.includes('job') || lower.includes('codveda') || lower.includes('acm')) {
+      return {
+        reply: "Somil completed a Web Development Internship at Codveda Technologies and is an active Student Chapter Member at ACM (Association for Computing Machinery).",
+        action: { label: 'View Experience', sectionId: 'education' },
+      };
+    }
+
+    // Certifications & Badges
+    if (lower.includes('certif') || lower.includes('nptel') || lower.includes('badge') || lower.includes('credly') || lower.includes('google')) {
+      return {
+        reply: "Somil holds credentials including Google Gemini Certified Student, NPTEL — IIT Kharagpur, NPTEL — IIT Roorkee, Unstop Python DSA, and 8 verified Credly digital badges in Cloud and AI.",
         action: { label: 'View Certificates', sectionId: 'certificates' },
       };
     }
-    if (lower.includes('hire') || lower.includes('intern') || lower.includes('work') || lower.includes('contact')) {
+
+    // Resume / CV
+    if (lower.includes('resume') || lower.includes('cv')) {
       return {
-        reply: "Somil is actively open for AI/ML and Software Engineering internships! You can message him directly via the contact form or LinkedIn.",
+        reply: "You can download Somil's updated PDF resume directly using the 'Resume' button in the Hero section at the top of the page.",
+        action: { label: 'Download Resume', sectionId: 'home' },
+      };
+    }
+
+    // Hire / Contact
+    if (lower.includes('hire') || lower.includes('contact') || lower.includes('work') || lower.includes('email') || lower.includes('reach') || lower.includes('message') || lower.includes('collaborat')) {
+      return {
+        reply: "Somil is actively open for AI/ML engineering roles, internships, and freelance projects! You can send him a message directly through the contact form at the bottom of the page or on LinkedIn.",
         action: { label: 'Contact Somil', sectionId: 'contact' },
       };
     }
+
     return {
-      reply: "Somil is a BCA (AI & ML) student at Poornima University building intelligent web systems and computer vision applications. Feel free to ask about his projects, skills, or experience!",
+      reply: "Somil is an AI & Machine Learning Developer at Poornima University building computer vision apps and full-stack software. Feel free to ask about his projects, skills, education, or how to get in touch!",
       action: { label: 'View Projects', sectionId: 'projects' },
     };
   };
@@ -371,7 +429,8 @@ export function AiAssistant() {
             timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
           },
         ]);
-      } catch {
+      } catch (err) {
+        console.error('[AI Assistant Service Error]:', err);
         // Seamless fallback to profile knowledge base without displaying technical errors
         const fallback = getFallbackReply(query);
         setMessages((prev) => [
@@ -401,7 +460,7 @@ export function AiAssistant() {
           },
         ]);
         setIsTyping(false);
-      }, 400);
+      }, 500);
     }
   };
 
