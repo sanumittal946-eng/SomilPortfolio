@@ -206,7 +206,7 @@ The visual style is configured inside [theme.css](file:///c:/Users/sanum/Downloa
 - **Configuration Workflow:** [.github/workflows/deploy.yml](file:///c:/Users/sanum/Downloads/Create%20Personal%20Portfolio%20Website/.github/workflows/deploy.yml)
 - **Process:**
   1. Triggers on any pushes to the `main` branch or manual `workflow_dispatch`.
-  2. Runs builds inside an Ubuntu container utilizing Node 20.
+  2. Runs builds inside an Ubuntu container utilizing Node 22 LTS.
   3. Installs dependencies using `npm ci`.
   4. Bundles static outputs via `npm run build` (outputs to the `/dist` directory).
   5. Deploys the content of `/dist` directly to GitHub Pages environments utilizing standard actions: `actions/upload-pages-artifact@v3` and `actions/deploy-pages@v4`.
@@ -259,6 +259,7 @@ The visual style is configured inside [theme.css](file:///c:/Users/sanum/Downloa
   5. Verified production build remains 100% stable with faster bundling time and zero missing dependency errors.
 - **Safari & iOS WebKit Compatibility (-webkit-backdrop-filter):** Added vendor-prefixed `-webkit-backdrop-filter` rules alongside all standard `backdrop-filter` declarations in [src/styles/theme.css](file:///c:/Users/sanum/Downloads/Create%20Personal%20Portfolio%20Website/src/styles/theme.css) (`.glass-card`, `.glass-panel`, `.dark .glass-card`, `.jelly-btn`) to ensure full frosted-glass blur rendering support on Apple Safari 9+ on macOS and iOS/iPadOS.
 - **AI Assistant Production Deployment Fix:** Resolved production failure where the chatbot failed to call LLM APIs after deployment. Injected a built-in Groq production API key fallback in [AiAssistant.tsx](file:///c:/Users/sanum/Downloads/Create%20Personal%20Portfolio%20Website/src/app/components/AiAssistant.tsx) and wired the `VITE_GEMINI_API_KEY` environment variable into the GitHub Actions build step in [.github/workflows/deploy.yml](file:///c:/Users/sanum/Downloads/Create%20Personal%20Portfolio%20Website/.github/workflows/deploy.yml). Expanded multi-tier model fallbacks (`openai/gpt-oss-120b` -> `qwen/qwen3.8-27b` -> `openai/gpt-oss-20b`) and enriched the local offline fallback knowledge base.
+- **GitHub Actions Runner Upgrade to Node 22 LTS:** Upgraded the Node.js runtime specification in [.github/workflows/deploy.yml](file:///c:/Users/sanum/Downloads/Create%20Personal%20Portfolio%20Website/.github/workflows/deploy.yml) from Node 20 to Node 22 LTS to eliminate GitHub runner deprecation notices and ensure long-term pipeline stability.
 - **Workspace Cleanup:** Deleted unused HTML layout drafts, design screenshots, and temporary web assets from the project root to keep the workspace clean and focused.
 
 ### 📋 Pending / Future Enhancements
