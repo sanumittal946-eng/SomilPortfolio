@@ -328,9 +328,8 @@ export function AiAssistant() {
       parts: [{ text: userQuery }],
     });
 
-    const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`;
-
-    const res = await fetch(endpoint, {
+    // Primary: gemini-3.5-flash-lite with Google Search Grounding
+    let res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash-lite:generateContent?key=${apiKey}`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -349,6 +348,24 @@ export function AiAssistant() {
         },
       }),
     });
+
+    // Fallback: without search grounding tool if search tool hits quota/rate limits
+    if (!res.ok) {
+      res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash-lite:generateContent?key=${apiKey}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          system_instruction: {
+            parts: [{ text: enhancedSystemPrompt }],
+          },
+          contents: contents,
+          generationConfig: {
+            temperature: 0.7,
+            maxOutputTokens: 600,
+          },
+        }),
+      });
+    }
 
     if (!res.ok) {
       throw new Error(`Gemini API error ${res.status}`);
@@ -595,11 +612,10 @@ export function AiAssistant() {
                   className={`flex flex-col ${msg.sender === 'user' ? 'items-end' : 'items-start'}`}
                 >
                   <div
-                    className={`max-w-[85%] rounded-2xl p-3.5 shadow-md ${
-                      msg.sender === 'user'
-                        ? 'bg-primary-container text-[#161e00] font-medium rounded-tr-sm'
-                        : 'bg-surface-container/70 border border-glass-white/10 text-on-surface/90 rounded-tl-sm'
-                    }`}
+                    className={`max-w-[85%] rounded-2xl p-3.5 shadow-md ${msg.sender === 'user'
+                      ? 'bg-primary-container text-[#161e00] font-medium rounded-tr-sm'
+                      : 'bg-surface-container/70 border border-glass-white/10 text-on-surface/90 rounded-tl-sm'
+                      }`}
                   >
                     {renderFormattedContent(msg.text)}
 
