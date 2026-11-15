@@ -216,12 +216,39 @@ export function AiAssistant() {
     }
   }, [messages, isOpen]);
 
-  // Real-Time LLM API Call (Supports Groq & Google Gemini seamlessly in background)
+  // Fetch live public GitHub internet data for Somil Mittal
+  const fetchLiveGitHubData = async (): Promise<string> => {
+    try {
+      const res = await fetch('https://api.github.com/users/somil566/repos?sort=updated&per_page=6', {
+        headers: { Accept: 'application/vnd.github.v3+json' },
+      });
+      if (!res.ok) return '';
+      const repos = await res.json();
+      if (!Array.isArray(repos) || repos.length === 0) return '';
+      const list = repos
+        .slice(0, 5)
+        .map((r: any) => `• ${r.name} (${r.language || 'Code'}): ${r.description || 'Public Repository'} [${r.html_url}]`)
+        .join('\n');
+      return `\n\nLIVE INTERNET DATA (Fetched live from GitHub api.github.com/users/somil566):\n${list}`;
+    } catch {
+      return '';
+    }
+  };
+
+  // Real-Time LLM API Call (Hybrid: Groq Inference + Live GitHub Internet Data + Google Search Grounding)
   const callAiApi = async (userQuery: string, history: Message[]): Promise<string> => {
-    // ── Groq Cloud Execution (High-speed Llama / Qwen / GPT inference) ──
+    const isInternetQuery = /(github|repo|latest|recent|online|internet|web|commit|search|news|live)/i.test(userQuery);
+    let liveInternetContext = '';
+    if (isInternetQuery) {
+      liveInternetContext = await fetchLiveGitHubData();
+    }
+
+    const enhancedSystemPrompt = SYSTEM_INSTRUCTION + (liveInternetContext ? liveInternetContext : '');
+
+    // ── Groq Cloud Execution (High-speed Llama / Qwen / GPT inference with Live Data) ──
     if (apiKey.startsWith('gsk_')) {
       const messagesPayload = [
-        { role: 'system', content: SYSTEM_INSTRUCTION },
+        { role: 'system', content: enhancedSystemPrompt },
         ...history
           .filter((m) => m.id !== 'welcome')
           .map((m) => ({
@@ -288,7 +315,7 @@ export function AiAssistant() {
       return data?.choices?.[0]?.message?.content || "I'm here to help! Ask me anything about Somil.";
     }
 
-    // ── Google Gemini API Execution ──
+    // ── Google Gemini API Execution (With Google Search Grounding for Live Web Queries) ──
     const contents = history
       .filter((m) => m.id !== 'welcome')
       .map((m) => ({
@@ -308,12 +335,17 @@ export function AiAssistant() {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         system_instruction: {
-          parts: [{ text: SYSTEM_INSTRUCTION }],
+          parts: [{ text: enhancedSystemPrompt }],
         },
         contents: contents,
+        tools: [
+          {
+            google_search: {},
+          },
+        ],
         generationConfig: {
           temperature: 0.7,
-          maxOutputTokens: 500,
+          maxOutputTokens: 600,
         },
       }),
     });
