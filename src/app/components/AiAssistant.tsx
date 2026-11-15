@@ -192,8 +192,14 @@ export function AiAssistant() {
   const [input, setInput] = useState('');
   const [isTyping, setIsTyping] = useState(false);
 
-  // API key loaded securely from environment variable (injected at build time via GitHub Secrets or local .env)
-  const apiKey = (import.meta.env.VITE_GEMINI_API_KEY || '').trim();
+  // Dual API Keys loaded securely from environment variables (injected at build time via GitHub Secrets or local .env)
+  const rawGeminiKey = (import.meta.env.VITE_GEMINI_API_KEY || '').trim();
+  const rawGroqKey = (import.meta.env.VITE_GROQ_API_KEY || '').trim();
+
+  // Smart prefix detection in case user placed keys in either variable
+  const geminiApiKey = (!rawGeminiKey.startsWith('gsk_') ? rawGeminiKey : '') || (!rawGroqKey.startsWith('gsk_') ? rawGroqKey : '');
+  const groqApiKey = (rawGroqKey.startsWith('gsk_') ? rawGroqKey : '') || (rawGeminiKey.startsWith('gsk_') ? rawGeminiKey : '');
+  const hasApiKey = Boolean(geminiApiKey || groqApiKey);
 
   const [messages, setMessages] = useState<Message[]>([
     {
@@ -235,87 +241,80 @@ export function AiAssistant() {
     }
   };
 
-  // Real-Time LLM API Call (Hybrid: Groq Inference + Live GitHub Internet Data + Google Search Grounding)
-  const callAiApi = async (userQuery: string, history: Message[]): Promise<string> => {
-    const isInternetQuery = /(github|repo|latest|recent|online|internet|web|commit|search|news|live)/i.test(userQuery);
-    let liveInternetContext = '';
-    if (isInternetQuery) {
-      liveInternetContext = await fetchLiveGitHubData();
-    }
+  // Helper to query Groq Cloud
+  const callGroqApi = async (userQuery: string, history: Message[], systemPrompt: string, key: string): Promise<string> => {
+    const messagesPayload = [
+      { role: 'system', content: systemPrompt },
+      ...history
+        .filter((m) => m.id !== 'welcome')
+        .map((m) => ({
+          role: m.sender === 'user' ? 'user' : 'assistant',
+          content: m.text,
+        })),
+      { role: 'user', content: userQuery },
+    ];
 
-    const enhancedSystemPrompt = SYSTEM_INSTRUCTION + (liveInternetContext ? liveInternetContext : '');
+    let res: Response;
 
-    // ── Groq Cloud Execution (High-speed Llama / Qwen / GPT inference with Live Data) ──
-    if (apiKey.startsWith('gsk_')) {
-      const messagesPayload = [
-        { role: 'system', content: enhancedSystemPrompt },
-        ...history
-          .filter((m) => m.id !== 'welcome')
-          .map((m) => ({
-            role: m.sender === 'user' ? 'user' : 'assistant',
-            content: m.text,
-          })),
-        { role: 'user', content: userQuery },
-      ];
+    // Primary model: openai/gpt-oss-120b
+    res = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${key}`,
+      },
+      body: JSON.stringify({
+        model: 'openai/gpt-oss-120b',
+        messages: messagesPayload,
+        temperature: 0.7,
+        max_tokens: 500,
+      }),
+    });
 
-      // Primary model: openai/gpt-oss-120b
-      let res = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+    // Fallback model 1: qwen/qwen3.8-27b
+    if (!res.ok) {
+      res = await fetch('https://api.groq.com/openai/v1/chat/completions', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${apiKey}`,
+          'Authorization': `Bearer ${key}`,
         },
         body: JSON.stringify({
-          model: 'openai/gpt-oss-120b',
+          model: 'qwen/qwen3.8-27b',
           messages: messagesPayload,
           temperature: 0.7,
           max_tokens: 500,
         }),
       });
-
-      // Fallback model 1: qwen/qwen3.8-27b
-      if (!res.ok) {
-        res = await fetch('https://api.groq.com/openai/v1/chat/completions', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${apiKey}`,
-          },
-          body: JSON.stringify({
-            model: 'qwen/qwen3.8-27b',
-            messages: messagesPayload,
-            temperature: 0.7,
-            max_tokens: 500,
-          }),
-        });
-      }
-
-      // Fallback model 2: openai/gpt-oss-20b
-      if (!res.ok) {
-        res = await fetch('https://api.groq.com/openai/v1/chat/completions', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${apiKey}`,
-          },
-          body: JSON.stringify({
-            model: 'openai/gpt-oss-20b',
-            messages: messagesPayload,
-            temperature: 0.7,
-            max_tokens: 500,
-          }),
-        });
-      }
-
-      if (!res.ok) {
-        throw new Error(`Groq API error ${res.status}`);
-      }
-
-      const data = await res.json();
-      return data?.choices?.[0]?.message?.content || "I'm here to help! Ask me anything about Somil.";
     }
 
-    // ── Google Gemini API Execution (With Google Search Grounding for Live Web Queries) ──
+    // Fallback model 2: openai/gpt-oss-20b
+    if (!res.ok) {
+      res = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${key}`,
+        },
+        body: JSON.stringify({
+          model: 'openai/gpt-oss-20b',
+          messages: messagesPayload,
+          temperature: 0.7,
+          max_tokens: 500,
+        }),
+      });
+    }
+
+    if (!res.ok) {
+      throw new Error(`Groq API error ${res.status}`);
+    }
+
+    const data = await res.json();
+    return data?.choices?.[0]?.message?.content || "I'm here to help! Ask me anything about Somil.";
+  };
+
+  // Helper to query Google Gemini (with Google Search Grounding for live web information)
+  const callGeminiApi = async (userQuery: string, history: Message[], systemPrompt: string, key: string): Promise<string> => {
     const contents = history
       .filter((m) => m.id !== 'welcome')
       .map((m) => ({
@@ -328,13 +327,15 @@ export function AiAssistant() {
       parts: [{ text: userQuery }],
     });
 
+    let res: Response;
+
     // Primary: gemini-3.5-flash-lite with Google Search Grounding
-    let res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash-lite:generateContent?key=${apiKey}`, {
+    res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash-lite:generateContent?key=${key}`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         system_instruction: {
-          parts: [{ text: enhancedSystemPrompt }],
+          parts: [{ text: systemPrompt }],
         },
         contents: contents,
         tools: [
@@ -351,12 +352,12 @@ export function AiAssistant() {
 
     // Fallback: without search grounding tool if search tool hits quota/rate limits
     if (!res.ok) {
-      res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash-lite:generateContent?key=${apiKey}`, {
+      res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash-lite:generateContent?key=${key}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           system_instruction: {
-            parts: [{ text: enhancedSystemPrompt }],
+            parts: [{ text: systemPrompt }],
           },
           contents: contents,
           generationConfig: {
@@ -374,6 +375,38 @@ export function AiAssistant() {
     const data = await res.json();
     const candidateText = data?.candidates?.[0]?.content?.parts?.[0]?.text;
     return candidateText || "I'm here to help! Ask me anything about Somil.";
+  };
+
+  // Real-Time LLM API Call (Hybrid: Gemini with Search Grounding + Groq Inference + Live GitHub Internet Data)
+  const callAiApi = async (userQuery: string, history: Message[]): Promise<string> => {
+    const isInternetQuery = /(github|repo|latest|recent|online|internet|web|commit|search|news|live)/i.test(userQuery);
+    let liveInternetContext = '';
+    if (isInternetQuery) {
+      liveInternetContext = await fetchLiveGitHubData();
+    }
+
+    const enhancedSystemPrompt = SYSTEM_INSTRUCTION + (liveInternetContext ? liveInternetContext : '');
+
+    // Case 1: If Gemini API key is available, run Gemini first (empowered by Google Search Grounding)
+    if (geminiApiKey) {
+      try {
+        return await callGeminiApi(userQuery, history, enhancedSystemPrompt, geminiApiKey);
+      } catch (geminiError) {
+        console.warn('[Gemini Service Notice]: Attempting Groq fallback...', geminiError);
+        // If Groq key is also provided, fall over to Groq seamlessly
+        if (groqApiKey) {
+          return await callGroqApi(userQuery, history, enhancedSystemPrompt, groqApiKey);
+        }
+        throw geminiError;
+      }
+    }
+
+    // Case 2: If Groq API key is available
+    if (groqApiKey) {
+      return await callGroqApi(userQuery, history, enhancedSystemPrompt, groqApiKey);
+    }
+
+    throw new Error('No valid API key available');
   };
 
   // Fallback Local Knowledge Base
@@ -466,7 +499,7 @@ export function AiAssistant() {
     if (!textToSend) setInput('');
     setIsTyping(true);
 
-    if (apiKey) {
+    if (hasApiKey) {
       try {
         const reply = await callAiApi(query, newHistory);
         setMessages((prev) => [
