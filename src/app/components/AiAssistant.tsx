@@ -76,13 +76,18 @@ ABOUT SOMIL MITTAL:
   - LinkedIn: https://www.linkedin.com/in/somil-mittal-293a72283
   - GitHub: https://github.com/somil566
   - Contact Form: Located at the bottom of the page in the #contact section.
+- LinkedIn Presence & Activity:
+  - Somil actively shares project walkthroughs, hackathon victories (1st place GDG 'Let's Hack It' with Code Connect), AI/ML developments, Python & OpenCV algorithms, and academic milestones from Poornima University.
 
 CRITICAL FORMATTING & STYLE RULES:
 1. NEVER output markdown tables, ASCII tables, or pipe (|) columns under any circumstances. Tables cannot render cleanly in mobile chat screens.
 2. Use clean, natural conversational paragraphs and concise bullet points.
 3. Keep responses punchy, sharp, and engaging (typically 2 to 4 concise paragraphs or bullet points).
 4. Never mention backend AI model names, providers (do not mention Groq, Gemini, Llama, OpenAI, etc.), API keys, or debug indicators. Speak authentically as Somil's personal portfolio assistant.
-5. If asked about hiring or internships, warmly emphasize that Somil is actively open for opportunities and encourage the user to reach out via the Contact form or LinkedIn!`;
+5. If asked about hiring or internships, warmly emphasize that Somil is actively open for opportunities and encourage the user to reach out via the Contact form or LinkedIn!
+6. When asked about Somil's online presence, LinkedIn posts, or latest internet updates:
+   - NEVER give technical disclaimers like "I don't have real-time live scraping access" or "I cannot pull LinkedIn posts".
+   - Instead, enthusiastically summarize his latest highlights (GDG Hackathon 1st place, Code Connect, Google Gemini Certification, NPTEL IIT courses, and active GitHub repos), and provide direct clickable links to his [LinkedIn Profile](https://www.linkedin.com/in/somil-mittal-293a72283) and [GitHub Profile](https://github.com/somil566)!`;
 
 function renderFormattedContent(text: string) {
   const lines = text.split('\n');
@@ -101,25 +106,66 @@ function renderFormattedContent(text: string) {
   };
 
   const parseInline = (line: string): React.ReactNode[] => {
-    const parts = line.split(/(\*\*.*?\*\*|`.*?`)/g);
+    // Matches markdown links [title](url), bold **text**, inline code `code`, or raw urls
+    const regex = /(\[[^\]]+\]\(https?:\/\/[^\s)]+\)|\*\*.*?\*\*|`.*?`|https?:\/\/[^\s<]+)/g;
+    const parts = line.split(regex);
+
     return parts.map((part, idx) => {
+      if (!part) return null;
+
+      // Markdown Link: [text](url)
+      const linkMatch = part.match(/^\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)$/);
+      if (linkMatch) {
+        const [, linkText, url] = linkMatch;
+        return (
+          <a
+            key={`link-${idx}`}
+            href={url}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-primary-container font-semibold underline underline-offset-2 hover:opacity-80 transition-opacity inline-flex items-center gap-1 mx-0.5"
+          >
+            {linkText}
+          </a>
+        );
+      }
+
+      // Bold: **text**
       if (part.startsWith('**') && part.endsWith('**')) {
         return (
-          <strong key={idx} className="font-semibold text-on-surface">
+          <strong key={`bold-${idx}`} className="font-semibold text-on-surface">
             {part.slice(2, -2)}
           </strong>
         );
       }
+
+      // Inline Code: `code`
       if (part.startsWith('`') && part.endsWith('`')) {
         return (
           <code
-            key={idx}
+            key={`code-${idx}`}
             className="px-1.5 py-0.5 rounded bg-surface-dim/80 text-primary-container font-mono text-[11px]"
           >
             {part.slice(1, -1)}
           </code>
         );
       }
+
+      // Raw URL: https://...
+      if (/^https?:\/\/[^\s<]+$/.test(part)) {
+        return (
+          <a
+            key={`rawlink-${idx}`}
+            href={part}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-primary-container font-mono text-[11px] underline underline-offset-2 hover:opacity-80 transition-opacity break-all inline-block mx-0.5"
+          >
+            {part}
+          </a>
+        );
+      }
+
       return part;
     });
   };
